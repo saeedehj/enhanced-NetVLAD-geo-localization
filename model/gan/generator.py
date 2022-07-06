@@ -27,11 +27,11 @@ See training and test tips at: https://github.com/junyanz/pytorch-CycleGAN-and-p
 See frequently asked questions at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/qa.md
 """
 import os
-from options.test_options import TestOptions
-from data import create_dataset
-from models import create_model
-from util.visualizer import save_images
-from util import html
+from model.gan.options.test_options import TestOptions
+from model.gan.data import create_dataset
+from model.gan.models import create_model
+from model.gan.util.visualizer import save_images
+from model.gan.util import html
 
 
 def gan():

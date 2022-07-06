@@ -1,5 +1,5 @@
 import torch
-from .base_model import BaseModel
+from model.gan.models.base_model import BaseModel
 from . import networks
 
 
