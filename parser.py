@@ -87,7 +87,7 @@ def parse_arguments():
     parser.add_argument("--horizontal_flip", action='store_true', help="_")
     parser.add_argument("--random_resized_crop", type=float, default=None, help="_")
     parser.add_argument("--random_rotation", type=float, default=None, help="_")
-    parser.add_argument("--gan_augmentation", type=str, default="false", choices=["false", "true"] ,help="_")
+    parser.add_argument("--gan_augmentation", type=str, default="true", choices=["false", "true"] ,help="_")
 
     # Paths parameters
     parser.add_argument("--datasets_folder", type=str, default=None, help="Path with all datasets")
