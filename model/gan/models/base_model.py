@@ -182,7 +182,8 @@ class BaseModel(ABC):
         for name in self.model_names:
             if isinstance(name, str):
                 load_filename = '%s_net_%s.pth' % (epoch, name)
-                load_path = os.path.join(self.save_dir, load_filename)
+                # load_path = os.path.join(self.save_dir, load_filename)
+                load_path = 'http://efrosgans.eecs.berkeley.edu/pix2pix/models-pytorch/day2night.pth'
                 net = getattr(self, 'net' + name)
                 if isinstance(net, torch.nn.DataParallel):
                     net = net.module
