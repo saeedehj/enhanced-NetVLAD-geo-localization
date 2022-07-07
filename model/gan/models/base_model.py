@@ -3,6 +3,7 @@ import torch
 from collections import OrderedDict
 from abc import ABC, abstractmethod
 from . import networks
+from torch.utils.model_zoo import load_url
 
 
 class BaseModel(ABC):
@@ -190,7 +191,8 @@ class BaseModel(ABC):
                 print('loading the model from %s' % load_path)
                 # if you are using PyTorch newer than 0.4 (e.g., built from
                 # GitHub source), you can remove str() on self.device
-                state_dict = torch.load(load_path, map_location=str(self.device))
+                state_dict = load_url(load_path)
+                print('loading the model finished')
                 if hasattr(state_dict, '_metadata'):
                     del state_dict._metadata
 

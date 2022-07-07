@@ -9,6 +9,7 @@ class TestOptions(BaseOptions):
     """
 
     def initialize(self, parser):
+        print('TestOptions start')
         parser = BaseOptions.initialize(self, parser)  # define shared options
         parser.add_argument('--results_dir', type=str, default='./results/', help='saves results here.')
 
@@ -22,4 +23,5 @@ class TestOptions(BaseOptions):
         # To avoid cropping, the load_size should be the same as crop_size
         parser.set_defaults(load_size=parser.get_default('crop_size'))
         self.isTrain = False
+        print('TestOptions end')
         return parser

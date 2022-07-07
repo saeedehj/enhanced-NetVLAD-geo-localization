@@ -194,6 +194,8 @@ class TripletsDataset(BaseDataset):
         
         if self.gan == "true":
             print("gan activated")
+            generator.gan()
+            print('gan finished')
 
            
         

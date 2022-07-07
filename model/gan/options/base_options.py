@@ -56,6 +56,12 @@ class BaseOptions():
         parser.add_argument('--load_iter', type=int, default='0', help='which iteration to load? if load_iter > 0, the code will load models by iter_[load_iter]; otherwise, the code will load models by [epoch]')
         parser.add_argument('--verbose', action='store_true', help='if specified, print more debugging information')
         parser.add_argument('--suffix', default='', type=str, help='customized suffix: opt.name = opt.name + suffix: e.g., {model}_{netG}_size{load_size}')
+        # Paths parameters
+        parser.add_argument("--datasets_folder", type=str, default=None, help="Path with all datasets")
+        parser.add_argument("--dataset_name", type=str, default="pitts30k", help="Relative path of the dataset")
+        parser.add_argument("--epochs_num", type=int, default=1000,
+                        help="number of epochs to train for")
+    
         self.initialized = True
         return parser
 
@@ -106,11 +112,9 @@ class BaseOptions():
 
         # save to the disk
         expr_dir = os.path.join(opt.checkpoints_dir, opt.name)
-        util.mkdirs(expr_dir)
+        #util.mkdirs(expr_dir)
         file_name = os.path.join(expr_dir, '{}_opt.txt'.format(opt.phase))
-        with open(file_name, 'wt') as opt_file:
-            opt_file.write(message)
-            opt_file.write('\n')
+     
 
     def parse(self):
         """Parse our options, create checkpoints directory suffix, and set up gpu device."""
