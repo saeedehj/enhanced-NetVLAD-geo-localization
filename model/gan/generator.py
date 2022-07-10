@@ -32,11 +32,13 @@ from model.gan.data import create_dataset
 from model.gan.models import create_model
 from model.gan.util.visualizer import save_images
 from model.gan.util import html
+import parser
 
 
 def gan():
     print('TestOptions before parsed')
-    opt = TestOptions().parse()  # get test options
+    opt = parser.parse_arguments()
+    # get test options
     print('TestOptions parsed')
     # hard-code some parameters for test
     opt.num_threads = 0   # test code only supports num_threads = 0
