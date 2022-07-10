@@ -27,7 +27,6 @@ See training and test tips at: https://github.com/junyanz/pytorch-CycleGAN-and-p
 See frequently asked questions at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/qa.md
 """
 import os
-from model.gan.options.test_options import TestOptions
 from model.gan.data import create_dataset
 from model.gan.models import create_model
 from model.gan.util.visualizer import save_images
