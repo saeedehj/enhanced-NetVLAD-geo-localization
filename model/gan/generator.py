@@ -32,6 +32,7 @@ from model.gan.models import create_model
 from model.gan.util.visualizer import save_images
 from model.gan.util import html
 import parser
+import torch
 
 
 def gan():
@@ -46,6 +47,16 @@ def gan():
     opt.no_flip = True    # no flip; comment this line if results on flipped images are needed.
     opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
     print('TestOptions')
+     # set gpu ids
+    str_ids = opt.gpu_ids.split(',')
+    opt.gpu_ids = []
+    for str_id in str_ids:
+        id = int(str_id)
+        if id >= 0:
+            opt.gpu_ids.append(id)
+    if len(opt.gpu_ids) > 0:
+        torch.cuda.set_device(opt.gpu_ids[0])
+    
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     print('create_dataset')
     model = create_model(opt)      # create a model given opt.model and other options
