@@ -37,7 +37,7 @@ from model.gan.options.test_options import TestOptions
 
 def gan():
     print('TestOptions before parsed')
-    opt = parser.parse_arguments()
+    # opt = parser.parse_arguments()
 
     # # modify model-related parser options
     # model_name = opt.model
@@ -48,9 +48,9 @@ def gan():
     # get_option_setter(dataset_name)
 
     # process opt.suffix
-    if opt.suffix:
-        suffix = ('_' + opt.suffix.format(**vars(opt))) if opt.suffix != '' else ''
-        opt.name = opt.name + suffix
+    # if opt.suffix:
+    #     suffix = ('_' + opt.suffix.format(**vars(opt))) if opt.suffix != '' else ''
+    #     opt.name = opt.name + suffix
 
     # message = ''
     # message += '----------------- Options ---------------\n'
