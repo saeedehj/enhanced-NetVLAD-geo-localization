@@ -33,12 +33,15 @@ from model.gan.util.visualizer import save_images
 from model.gan.util import html
 import parser
 import torch
+from model.gan.options.test_options import TestOptions
 
 
 def gan():
     print('TestOptions before parsed')
-    opt = parser.parse_arguments()
+    #opt = parser.parse_arguments()
+    opt = TestOptions().parse
     # get test options
+
     print('TestOptions parsed')
     # hard-code some parameters for test
     opt.num_threads = 0   # test code only supports num_threads = 0
@@ -48,14 +51,14 @@ def gan():
     opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
     print('TestOptions')
      # set gpu ids
-    str_ids = opt.gpu_ids.split(',')
-    opt.gpu_ids = []
-    for str_id in str_ids:
-        id = int(str_id)
-        if id >= 0:
-            opt.gpu_ids.append(id)
-    if len(opt.gpu_ids) > 0:
-        torch.cuda.set_device(opt.gpu_ids[0])
+    # str_ids = opt.gpu_ids.split(',')
+    # opt.gpu_ids = []
+    # for str_id in str_ids:
+    #     id = int(str_id)
+    #     if id >= 0:
+    #         opt.gpu_ids.append(id)
+    # if len(opt.gpu_ids) > 0:
+    #     torch.cuda.set_device(opt.gpu_ids[0])
     
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     print('create_dataset')

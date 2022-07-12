@@ -96,7 +96,16 @@ def parse_arguments():
     parser.add_argument("--pca_dataset_folder", type=str, default=None,
                         help="Path with images to be used to compute PCA (ie: pitts30k/images/train")
     parser.add_argument("--save_dir", type=str, default="default", help="Folder name of the current run (saved in ./logs/)")
-   
+    
+    # Multi Scaling
+    parser.add_argument('--multi_scale', type=str, default="False", choices=['True', 'False'])
+    parser.add_argument('--scaling_type', type=str, default="down", choices=['down', 'up'])
+    parser.add_argument('--random_crop', type=str, default="False", choices=['False', 'True'])
+
+    # Re-ranking
+    parser.add_argument("--cluster_type", type=str, default=None, choices=['DBSCAN', 'agglomorative', 'proposed'])
+    parser.add_argument("--approach", type=str, default="approach1", choices=['approach1', 'approach2', 'approach3','approach4'])
+
     # GAN Params
     parser.add_argument('--phase', type=str, default='test', help='train, val, test, etc')
     parser.add_argument('--aspect_ratio', type=float, default=1.0, help='aspect ratio of result images')
@@ -109,6 +118,7 @@ def parse_arguments():
     parser.add_argument('--use_wandb', action='store_true', help='use wandb')
     parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
     parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are saved here')
+    
     # model parameters
     parser.add_argument('--model', type=str, default='pix2pix', help='chooses which model to use. [cycle_gan | pix2pix | test | colorization]')
     parser.add_argument('--input_nc', type=int, default=3, help='# of input image channels: 3 for RGB and 1 for grayscale')
