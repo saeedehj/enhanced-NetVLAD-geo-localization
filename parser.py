@@ -23,7 +23,8 @@ def parse_arguments():
     parser.add_argument("--lr", type=float, default=0.00001, help="_")
     parser.add_argument("--lr_crn_layer", type=float, default=5e-3, help="Learning rate for the CRN layer")
     parser.add_argument("--lr_crn_net", type=float, default=5e-4, help="Learning rate to finetune pretrained network when using CRN")
-    parser.add_argument("--optim", type=str, default="adam", help="_", choices=["adam", "sgd"])
+    parser.add_argument("--optim", type=str, default="adam", help="_", choices=["adam", "sgd", "adamw" , "ASGD"])
+    parser.add_argument("--schedular", type=str, default="false", help="_", choices=["true", "false"])
     parser.add_argument("--cache_refresh_rate", type=int, default=1000,
                         help="How often to refresh cache, in number of queries")
     parser.add_argument("--queries_per_epoch", type=int, default=5000,

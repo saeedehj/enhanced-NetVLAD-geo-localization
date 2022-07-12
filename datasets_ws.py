@@ -164,11 +164,11 @@ class TripletsDataset(BaseDataset):
         
 
         self.query_transform = transforms.Compose([
-                CustomBrightnessTramsforms(brightness=args.brightness_factor)       if args.brightness          != None else identity_transform,
-                CustomContrastTramsforms(contrast=args.contrast_factor)           if args.contrast            != None else identity_transform,
-                CustomSaturationTramsforms(saturation=args.saturation_factor)       if args.saturation          != None else identity_transform,
-                CustomSharpnessTramsforms(sharpness=args.sharpness_factor)       if args.sharpness          != None else identity_transform,
-                GammaTramsforms(gamma=args.gamma, gain=args.gain)       if args.gamma!= None  & args.gain!=None  else identity_transform,
+                CustomBrightnessTramsforms(brightness=args.brightness_factor)       if args.brightness_factor          != None else identity_transform,
+                CustomContrastTramsforms(contrast=args.contrast_factor)           if args.contrast_factor            != None else identity_transform,
+                CustomSaturationTramsforms(saturation=args.saturation_factor)       if args.saturation_factor          != None else identity_transform,
+                CustomSharpnessTramsforms(sharpness=args.sharpness_factor)       if args.sharpness_factor          != None else identity_transform,
+                GammaTramsforms(gamma=args.gamma, gain=args.gain)        if (args.gamma != None  and  args.gain != None) else identity_transform,
                 transforms.ColorJitter(brightness=args.brightness)       if args.brightness          != None else identity_transform,
                 transforms.ColorJitter(contrast=args.contrast)           if args.contrast            != None else identity_transform,
                 transforms.ColorJitter(saturation=args.saturation)       if args.saturation          != None else identity_transform,

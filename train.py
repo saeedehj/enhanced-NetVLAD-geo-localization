@@ -67,10 +67,19 @@ if args.aggregation == "crn":
         optimizer = torch.optim.SGD([{'params': crn_params, 'lr': args.lr_crn_layer, 'momentum': 0.9, 'weight_decay': 0.001},
                                       {'params': net_params, 'lr': args.lr_crn_net, 'momentum': 0.9, 'weight_decay': 0.001}])
 else:
+    ### Optimizer
     if args.optim == "adam":
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     elif args.optim == "sgd":
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=0.001)
+    elif args.optim == "adamw":
+        optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.001)
+    elif args.optim == "ASGD":
+        optimizer = torch.optim.ASGD(model.parameters(), lr=args.lr, lambd=0.0001, alpha=0.75, t0=1000000.0, weight_decay=0.001)
+    ### Scheduler
+    if args.schedular == "true":
+        schedular = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=3)
+
 
 if args.criterion == "triplet":
     criterion_triplet = nn.TripletMarginLoss(margin=args.margin, p=2, reduction="sum")
@@ -108,6 +117,10 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
     
     epoch_start_time = datetime.now()
     epoch_losses = np.zeros((0,1), dtype=np.float32)
+
+    ## SetUp Scheduler
+    if args.schedular == "true":
+        schedular.step(epoch_losses.mean())
     
     # How many loops should an epoch last (default is 5000/1000=5)
     loops_num = math.ceil(args.queries_per_epoch / args.cache_refresh_rate)
