@@ -5,12 +5,12 @@ import util
 import torch
 import model.gan.models as models
 import model.gan.data as data
-import parser as ps 
+
+
 
 
 class BaseOptions():
     """This class defines options used during both training and test time.
-
     It also implements several helper functions such as parsing, printing, and saving the options.
     It also gathers additional options defined in <modify_commandline_options> functions in both dataset class and model class.
     """
@@ -22,14 +22,13 @@ class BaseOptions():
     def initialize(self, parser):
         """Define the common options that are used in both training and test."""
         # basic parameters
-        parser.add_argument('--dataroot', type=str, default='/tmp/pitts30k/images/train/queries/')
         parser.add_argument('--dataroot', required=True, help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
-        parser.add_argument('--name', type=str, default='day2night_pretrained', help='name of the experiment. It decides where to store samples and models')
+        parser.add_argument('--name', type=str, default='experiment_name', help='name of the experiment. It decides where to store samples and models')
         parser.add_argument('--use_wandb', action='store_true', help='use wandb')
         parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are saved here')
         # model parameters
-        parser.add_argument('--model', type=str, default='pix2pix', help='chooses which model to use. [cycle_gan | pix2pix | test | colorization]')
+        parser.add_argument('--model', type=str, default='cycle_gan', help='chooses which model to use. [cycle_gan | pix2pix | test | colorization]')
         parser.add_argument('--input_nc', type=int, default=3, help='# of input image channels: 3 for RGB and 1 for grayscale')
         parser.add_argument('--output_nc', type=int, default=3, help='# of output image channels: 3 for RGB and 1 for grayscale')
         parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in the last conv layer')
@@ -42,7 +41,7 @@ class BaseOptions():
         parser.add_argument('--init_gain', type=float, default=0.02, help='scaling factor for normal, xavier and orthogonal.')
         parser.add_argument('--no_dropout', action='store_true', help='no dropout for the generator')
         # dataset parameters
-        parser.add_argument('--dataset_mode', type=str, default='aligned', help='chooses how datasets are loaded. [unaligned | aligned | single | colorization]')
+        parser.add_argument('--dataset_mode', type=str, default='unaligned', help='chooses how datasets are loaded. [unaligned | aligned | single | colorization]')
         parser.add_argument('--direction', type=str, default='AtoB', help='AtoB or BtoA')
         parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
         parser.add_argument('--num_threads', default=4, type=int, help='# threads for loading data')
@@ -58,12 +57,12 @@ class BaseOptions():
         parser.add_argument('--load_iter', type=int, default='0', help='which iteration to load? if load_iter > 0, the code will load models by iter_[load_iter]; otherwise, the code will load models by [epoch]')
         parser.add_argument('--verbose', action='store_true', help='if specified, print more debugging information')
         parser.add_argument('--suffix', default='', type=str, help='customized suffix: opt.name = opt.name + suffix: e.g., {model}_{netG}_size{load_size}')
-        # Paths parameters
+        
         parser.add_argument("--datasets_folder", type=str, default=None, help="Path with all datasets")
         parser.add_argument("--dataset_name", type=str, default="pitts30k", help="Relative path of the dataset")
         parser.add_argument("--epochs_num", type=int, default=1000,
                         help="number of epochs to train for")
-    
+        
         self.initialized = True
         return parser
 
@@ -74,8 +73,7 @@ class BaseOptions():
         in model and dataset classes.
         """
         if not self.initialized:  # check if it has been initialized
-           # parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-            args , parser = ps.parse_arguments()
+            parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
             parser = self.initialize(parser)
 
         # get the basic options
@@ -98,7 +96,6 @@ class BaseOptions():
 
     def print_options(self, opt):
         """Print and save options
-
         It will print both current options and default values(if different).
         It will save options into a text file / [checkpoints_dir] / opt.txt
         """
@@ -115,9 +112,11 @@ class BaseOptions():
 
         # save to the disk
         expr_dir = os.path.join(opt.checkpoints_dir, opt.name)
-        #util.mkdirs(expr_dir)
-        file_name = os.path.join(expr_dir, '{}_opt.txt'.format(opt.phase))
-     
+        # util.mkdirs(expr_dir)
+        # file_name = os.path.join(expr_dir, '{}_opt.txt'.format(opt.phase))
+        # with open(file_name, 'wt') as opt_file:
+        #     opt_file.write(message)
+        #     opt_file.write('\n')
 
     def parse(self):
         """Parse our options, create checkpoints directory suffix, and set up gpu device."""

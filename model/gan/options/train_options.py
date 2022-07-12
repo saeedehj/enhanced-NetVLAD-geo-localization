@@ -3,7 +3,6 @@ from model.gan.options.base_options import BaseOptions
 
 class TrainOptions(BaseOptions):
     """This class includes training options.
-
     It also includes shared options defined in BaseOptions.
     """
 
@@ -38,3 +37,6 @@ class TrainOptions(BaseOptions):
 
         self.isTrain = True
         return parser
+
+
+    
