@@ -5,6 +5,7 @@ import util
 import torch
 import model.gan.models as models
 import model.gan.data as data
+import parser as ps 
 
 
 class BaseOptions():
@@ -73,7 +74,8 @@ class BaseOptions():
         in model and dataset classes.
         """
         if not self.initialized:  # check if it has been initialized
-            parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+           # parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+            args , parser = ps.parse_arguments()
             parser = self.initialize(parser)
 
         # get the basic options
