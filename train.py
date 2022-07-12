@@ -22,7 +22,7 @@ from model.sync_batchnorm import convert_model
 from model.functional import sare_ind, sare_joint
 
 #### Initial setup: parser, logging...
-args , _= parser.parse_arguments()
+args= parser.parse_arguments()
 start_time = datetime.now()
 args.save_dir = join("logs", args.save_dir, start_time.strftime('%Y-%m-%d_%H-%M-%S'))
 commons.setup_logging(args.save_dir)

@@ -69,16 +69,16 @@ def gan():
     # file_name = os.path.join(expr_dir, '{}_opt.txt'.format(opt.phase))
 
     # set gpu ids
-    str_ids = opt.gpu_ids.split(',')
-    opt.gpu_ids = []
-    for str_id in str_ids:
-        id = int(str_id)
-        if id >= 0:
-            opt.gpu_ids.append(id)
-    if len(opt.gpu_ids) > 0:
-        torch.cuda.set_device(opt.gpu_ids[0])
+    # str_ids = opt.gpu_ids.split(',')
+    # opt.gpu_ids = []
+    # for str_id in str_ids:
+    #     id = int(str_id)
+    #     if id >= 0:
+    #         opt.gpu_ids.append(id)
+    # if len(opt.gpu_ids) > 0:
+    #     torch.cuda.set_device(opt.gpu_ids[0])
 
-    # opt = TestOptions().parse
+    opt = TestOptions().parse
     # get test options
 
 
