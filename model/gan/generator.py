@@ -37,7 +37,7 @@ from model.gan.options.test_options import TestOptions
 
 def gan():
     print('TestOptions before parsed')
-    # opt = parser.parse_arguments()
+    opt = parser.parse_arguments()
 
     # # modify model-related parser options
     # model_name = opt.model
@@ -47,10 +47,10 @@ def gan():
     # dataset_name = opt.dataset_mode
     # get_option_setter(dataset_name)
 
-    # # process opt.suffix
-    # if opt.suffix:
-    #     suffix = ('_' + opt.suffix.format(**vars(opt))) if opt.suffix != '' else ''
-    #     opt.name = opt.name + suffix
+    # process opt.suffix
+    if opt.suffix:
+        suffix = ('_' + opt.suffix.format(**vars(opt))) if opt.suffix != '' else ''
+        opt.name = opt.name + suffix
 
     # message = ''
     # message += '----------------- Options ---------------\n'
@@ -69,16 +69,16 @@ def gan():
     # file_name = os.path.join(expr_dir, '{}_opt.txt'.format(opt.phase))
 
     # set gpu ids
-    # str_ids = opt.gpu_ids.split(',')
-    # opt.gpu_ids = []
-    # for str_id in str_ids:
-    #     id = int(str_id)
-    #     if id >= 0:
-    #         opt.gpu_ids.append(id)
-    # if len(opt.gpu_ids) > 0:
-    #     torch.cuda.set_device(opt.gpu_ids[0])
+    str_ids = opt.gpu_ids.split(',')
+    opt.gpu_ids = []
+    for str_id in str_ids:
+        id = int(str_id)
+        if id >= 0:
+            opt.gpu_ids.append(id)
+    if len(opt.gpu_ids) > 0:
+        torch.cuda.set_device(opt.gpu_ids[0])
 
-    opt = TestOptions().parse
+    # opt = TestOptions().parse
     # get test options
 
 
@@ -109,6 +109,8 @@ def gan():
     # For [CycleGAN]: It should not affect CycleGAN as CycleGAN uses instancenorm without dropout.
     if opt.eval:
         model.eval()
+
+
     for i, data in enumerate(dataset):
         if i >= opt.num_test:  # only apply our model to opt.num_test images.
             break
