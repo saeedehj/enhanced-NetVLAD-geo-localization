@@ -162,11 +162,16 @@ class TripletsDataset(BaseDataset):
             base_transform
         ])
         
+
         self.query_transform = transforms.Compose([
-                CustomBrightnessTramsforms(brightness=args.brightness)       if args.brightness          != None else identity_transform,
-                CustomContrastTramsforms(contrast=args.contrast)           if args.contrast            != None else identity_transform,
-                CustomSaturationTramsforms(saturation=args.saturation)       if args.saturation          != None else identity_transform,
-                CustomSharpnessTramsforms(sharpness=args.sharpness)       if args.sharpness          != None else identity_transform,
+                CustomBrightnessTramsforms(brightness=args.brightness_factor)       if args.brightness          != None else identity_transform,
+                CustomContrastTramsforms(contrast=args.contrast_factor)           if args.contrast            != None else identity_transform,
+                CustomSaturationTramsforms(saturation=args.saturation_factor)       if args.saturation          != None else identity_transform,
+                CustomSharpnessTramsforms(sharpness=args.sharpness_factor)       if args.sharpness          != None else identity_transform,
+                GammaTramsforms(gamma=args.gamma, gain=args.gain)       if args.gamma!= None  & args.gain!=None  else identity_transform,
+                transforms.ColorJitter(brightness=args.brightness)       if args.brightness          != None else identity_transform,
+                transforms.ColorJitter(contrast=args.contrast)           if args.contrast            != None else identity_transform,
+                transforms.ColorJitter(saturation=args.saturation)       if args.saturation          != None else identity_transform,
                 transforms.ColorJitter(hue=args.hue)                     if args.hue                 != None else identity_transform,
                 transforms.RandomPerspective(args.rand_perspective)      if args.rand_perspective    != None else identity_transform,
                 transforms.RandomResizedCrop(size=self.resize, scale=(1-args.random_resized_crop, 1))  \
@@ -447,4 +452,11 @@ class CustomSharpnessTramsforms:
         img = transforms.functional.adjust_sharpness(img, sharpness_factor=self.sharpness)
         return img
 
-        adjust_gamma(img, gamma=3, gain=0.1)
+class GammaTramsforms:
+    def __init__(self, gamma, gain):
+        self.gamma = gamma
+        self.gain = gain
+    
+    def __call__(self, img):
+        img = transforms.functional.adjust_gamma(img, gamma=self.gamma, gain=self.gain)
+        return img

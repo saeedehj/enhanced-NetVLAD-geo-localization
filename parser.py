@@ -82,12 +82,19 @@ def parse_arguments():
     parser.add_argument("--brightness", type=float, default=None, help="_")
     parser.add_argument("--contrast", type=float, default=None, help="_")
     parser.add_argument("--saturation", type=float, default=None, help="_")
-    parser.add_argument("--sharpness", type=float, default=None, help="_")
     parser.add_argument("--hue", type=float, default=None, help="_")
     parser.add_argument("--rand_perspective", type=float, default=None, help="_")
     parser.add_argument("--horizontal_flip", action='store_true', help="_")
     parser.add_argument("--random_resized_crop", type=float, default=None, help="_")
     parser.add_argument("--random_rotation", type=float, default=None, help="_")
+
+    # Custom Data augmentation
+    parser.add_argument("--brightness_factor", type=float, default=None, help="_")
+    parser.add_argument("--contrast_factor", type=float, default=None, help="_")
+    parser.add_argument("--saturation_factor", type=float, default=None, help="_")
+    parser.add_argument("--sharpness_factor", type=float, default=None, help="_")
+    parser.add_argument("--gamma", type=float, default=None, help="_")
+    parser.add_argument("--gain", type=float, default=None, help="_")
     parser.add_argument("--gan_augmentation", type=str, default="true", choices=["false", "true"] ,help="_")
 
     # Paths parameters
@@ -104,7 +111,7 @@ def parse_arguments():
 
     # Re-ranking
     parser.add_argument("--cluster_type", type=str, default=None, choices=['DBSCAN', 'agglomorative', 'proposed'])
-    parser.add_argument("--approach", type=str, default="approach1", choices=['approach1', 'approach2', 'approach3','approach4'])
+    parser.add_argument("--approach", type=str, default=None, choices=['approach1', 'approach2', 'approach3'])
 
     # GAN Params
     parser.add_argument('--phase', type=str, default='test', help='train, val, test, etc')

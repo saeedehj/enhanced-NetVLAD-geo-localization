@@ -223,83 +223,12 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
             predictions[q, 0, :20] = preds[np.sort(unique_idx)][:20]
         predictions = predictions[:, 0, :20]  # keep only the closer 20 predictions for each query
 
-    for query_index, pred in enumerate(predictions):
-      utm_list = []
-      indx_list = np.array([])
-      for p in pred:
-        path = eval_ds.database_paths[p]
-        utm_x, utm_y = float(path.split("@")[1], path.split("@")[2])
-        utm_list.append((utm_x, utm_y))
-        indx_list = np.concatenate((indx_list , p), axis=0)
-      df_distance = pd.DataFrame(np.linalg.norm(utm_list - utm_list[:,None], axis=-1), columns= indx_list, index= indx_list)
-      if args.cluster_type == "DBSCAN":
-         model = DBSCAN(eps=5, min_samples=2, metric='precomputed')  
-         y = model.fit_predict(df_distance)
-      if args.cluster_type == "agglomorative":
-         model = AgglomerativeClustering(affinity='precomputed', n_clusters=5, linkage='complete').fit(df_distance )
-         y = model.labels_
-      #if args.cluster_type == "proposed":
-      if args.approach == "approach1":
-        cluster_dict = defaultdict(list)
-        for i, j in zip(df_distance.columns, y):
-            cluster_dict[j].append(i)
-      ############################
-      if args.approach == "approach2":
-        dist_dic= defaultdict()
-        d_list= []
-        for i in cluster_dict.keys():
-            for j in cluster_dict[i]:
-              row = predictions[query_index]
-              index_column = np.argwhere(row == j)[0][0]
-              dis_feat = distances[query_index][index_column]
-              dist_dic[j] = dis_feat
-            sort_dict = dict(sorted(dist_dic.items(), key=lambda item: item[1]))
-            key_list = list(sort_dict.keys())
-            d_list = np.concatenate((d_list, key_list), axis=0)
-            cluster_dict[i] = d_list 
-            dist_dic.clear()
-      #################################
-      len_cluster = defaultdict()
-      for k in cluster_dict.keys():
-          len_cluster[k] = len(cluster_dict[k])
-          sorted_cluster =  dict(sorted(len_cluster.items(), key=lambda x: x[1], reverse=True))
-      sorted_list = np.array([])
-      if args.approach == "approach3":
-          sorted_list = np.array([])
-          for k in sorted_cluster.keys():
-             element_0 = np.array(cluster_dict[k])[0]
-             sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
-          for k in sorted_cluster.keys():
-             new_list = np.delete(np.array(cluster_dict[k]), 0)
-             sorted_list = np.concatenate((sorted_list, new_list), axis=0)
-      if args.approach == "approach4":
-          sorted_list = np.array([])
-          for k in sorted_cluster.keys():
-              element_0 = np.array(cluster_dict[k])[0]
-              sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
-          dist2= defaultdict()
-          key_list2 = []
-          for i in sorted_list:
-             index_column2 = np.argwhere(predictions[query_index] == i)[0][0]
-             dist_feat2= distances[query_index][index_column2]
-             dist2[i] = dist_feat2
-             sort_dict2 = dict(sorted(dist2.items(), key=lambda item: item[1]))
-             key_list2 = list(sort_dict2.keys())
-      sorted_list1= []
-      sorted_list = np.concatenate((sorted_list1 , key_list2), axis=0)
-      for k in sorted_cluster.keys():
-          new_list = np.delete(np.array(d[k]), 0)
-          sorted_list1 = np.concatenate((sorted_list , new_list), axis=0)
-      else:
-          for k in sorted_cluster.keys():
-             elements = np.array(cluster_dict[k])
-             sorted_list = np.concatenate((sorted_list, np.array(elements).reshape(-1)), axis=0)
-      def f(seq): 
-          seen = set()
-          return [x for x in seq if x not in seen and not seen.add(x)]
-      pred = f(sorted_list)
-      predictions[query_index]= pred
-
+    
+    # sort based on size of cluster members
+    # sort based on size of cluster members + sort based on distance between features with query
+    # sort based on size of cluster members  + sort based on distance between features with query + first element of each group choose 
+    # sort based on size of cluster members  + sort based on distance between features with query + first element of each group choose and sort again + sort again based on distance features
+     
     #### For each query, check if the predictions are correct
     positives_per_query = eval_ds.get_positives()
     # args.recall_values by default is [1, 5, 10, 20]
