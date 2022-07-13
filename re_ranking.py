@@ -185,8 +185,8 @@ def re_ranking_distance_based(eval_ds, predictions, distances, approach):
                 dist_dic.clear()
             d_list = np.concatenate((key_list2 , others), axis=0)  
             pred = f_remove_dup(d_list)  
+        predictions[query_index]= pred
         
-    predictions[query_index]= pred
     return predictions
 
 def f_remove_dup(input): 
