@@ -172,7 +172,7 @@ def re_ranking_distance_based(eval_ds, predictions, distances, approach):
                 sort_dict = dict(sorted(dist_dic.items(), key=lambda item: item[1]))
                 key_list = list(sort_dict.keys())
                 others = np.concatenate((others, key_list[1:]), axis=0)
-                first = np.concatenate((first, key_list[0]), axis=0)
+                first.append(key_list[0])
                 for i in first:
                     row = predictions[query_index]
                     index_column2 = np.argwhere(row == i)[0][0]
