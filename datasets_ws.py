@@ -14,7 +14,6 @@ import torchvision.transforms as transforms
 from torch.utils.data.dataset import Subset
 from sklearn.neighbors import NearestNeighbors
 from torch.utils.data.dataloader import DataLoader
-from model.gan import generator
 
 
 base_transform = transforms.Compose([
