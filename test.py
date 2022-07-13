@@ -224,7 +224,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
             predictions[q, 0, :20] = preds[np.sort(unique_idx)][:20]
         predictions = predictions[:, 0, :20]  # keep only the closer 20 predictions for each query
 
-    if args.re_ranking == True:
+    if args.re_ranking:
     # approch 1 : sort based on size of cluster members
     # approch 2 : sort based on size of cluster members + sort based on distance between features with query
     # approch 3 : sort based on size of cluster members  + sort based on distance between features with query + first element of each group choose 

@@ -7,6 +7,7 @@ from collections import defaultdict
 
 def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approach):
     for query_index, pred in enumerate(predictions):
+        sorted_list = np.array([])
         utm_list = []
         indx_list = []
         for p in pred:
@@ -50,25 +51,26 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
         for k in d.keys():
             tag_count[k] = len(d[k])
             sorted_tag_count =  dict(sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
-        
-        sorted_list = np.array([])
-        if approach == 'approach1' or approach =='approach2':
+                
+        if approach == 'approach1':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
             pred = f_remove_dup(sorted_list)
-        
-        if approach == 'approach3':
+        elif approach =='approach2':
+            for k in sorted_tag_count.keys():
+                element_0 = np.array(d[k])
+                sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
+            pred = f_remove_dup(sorted_list) 
+        elif approach == 'approach3':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])[0]
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
             for k in sorted_tag_count.keys():
                 new_list = np.delete(np.array(d[k]), 0)
                 sorted_list = np.concatenate((sorted_list, new_list), axis=0)
-            
             pred = f_remove_dup(sorted_list)
-        
-        if approach == 'approach4':
+        elif approach == 'approach4':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])[0]
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
