@@ -11,6 +11,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.cluster import AgglomerativeClustering
 from collections import defaultdict
 from re_ranking import re_ranking_cluster_based, re_ranking_distance_based
+import torchvision.transforms as T
 
 def test_efficient_ram_usage(args, eval_ds, model, test_method="hard_resize"):
     """This function gives the same output as test(), but uses much less RAM.
