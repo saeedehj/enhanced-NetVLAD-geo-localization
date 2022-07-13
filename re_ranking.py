@@ -65,7 +65,7 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
                 new_list = np.delete(np.array(d[k]), 0)
                 sorted_list = np.concatenate((sorted_list, new_list), axis=0)
             pred = f_remove_dup(sorted_list)
-        elif approach == 'approch4':
+        elif approach == 'approach4':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])[0]
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
@@ -155,7 +155,7 @@ def re_ranking_distance_based(eval_ds, predictions, distances, approach):
                 dist_dic.clear()
             d_list = np.concatenate((first, others), axis=0)
             pred = f_remove_dup(d_list)
-        elif approach == 'approch4':
+        elif approach == 'approach4':
             dist_dic = defaultdict()
             dist2 = defaultdict()
             d_list = []
