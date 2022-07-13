@@ -104,8 +104,7 @@ def parse_arguments():
     
     # Multi Scaling
     parser.add_argument('--multi_scale', type=str, default="False", choices=['True', 'False'])
-    parser.add_argument('--scaling_type', type=str, default="down", choices=['down', 'up'])
-    parser.add_argument('--random_crop', type=str, default="False", choices=['False', 'True'])
+    parser.add_argument('--scaling_type', type=str, default="down", choices=['down', 'up', 'random_crop'])
 
     # Re-ranking
     parser.add_argument('--re_ranking', type=bool, default=False, choices=[True, False],

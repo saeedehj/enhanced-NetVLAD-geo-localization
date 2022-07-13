@@ -146,11 +146,49 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
             all_features = np.empty((len(eval_ds), args.features_dim), dtype="float32")
 
         for inputs, indices in tqdm(database_dataloader, ncols=100):
-            features = model(inputs.to(args.device))
-            features = features.cpu().numpy()
-            if pca != None:
-                features = pca.transform(features)
-            all_features[indices.numpy(), :] = features
+            if args.multi_scale == "True":
+                if args.scaling_type == "down": 
+                    scale_range = (480,640), (400,534), (343,458), (332,427)
+                    rescale_feature = []
+                    for i in (scale_range):
+                        globals()["input_scaled_data_%s" % i[0]] = torch.nn.functional.interpolate(inputs, i)
+                        globals()['input_scaled_data_%s' % i[0]]= model(globals()['input_scaled_data_%s' % i[0]].to(args.device))
+                        globals()['input_scaled_data_%s' % i[0]] = globals()['input_scaled_data_%s' % i[0]].cpu().numpy()
+                        rescale_feature.append(globals()['input_scaled_data_%s' % i[0]])
+                    features= np.mean(rescale_feature, axis=0)
+                    if pca != None:
+                        features = pca.transform(features)
+                    all_features[indices.numpy(), :] = features
+                elif args.scaling_type == "up":
+                    scale_range = (480,640), (576,768), (672,896), (720,960)
+                    for i in (scale_range):
+                        globals()["input_scaled_data_%s" % i[0]] = torch.nn.functional.interpolate(inputs, i)
+                        globals()['input_scaled_data_%s' % i[0]]= model(globals()['input_scaled_data_%s' % i[0]].to(args.device))
+                        globals()['input_scaled_data_%s' % i[0]] = globals()['input_scaled_data_%s' % i[0]].cpu().numpy()
+                        rescale_feature.append(globals()['input_scaled_data_%s' % i[0]])
+                    features= np.mean(rescale_feature, axis=0)
+                    if pca != None:
+                        features = pca.transform(features)
+                    all_features[indices.numpy(), :] = features
+                elif args.random_crop == "True":
+                    crop_feature = []
+                    for i in range(1,6):
+                        globals()["transform__%s" % i] = T.RandomCrop((320, 430))
+                        globals()['input_crop_data_%s' % i] = globals()["transform__%s" % i] (inputs)
+                        globals()['input_crop_data_%s' % i] = model(globals()['input_crop_data_%s' % i].to(args.device))
+                        globals()['input_crop_data_%s' % i] = globals()['input_crop_data_%s' % i].cpu().numpy()
+                        crop_feature.append(globals()['input_crop_data_%s' % i])
+                    features= np.mean(crop_feature, axis=0)
+                    if pca != None:
+                        features = pca.transform(features)
+                    all_features[indices.numpy(), :] = features
+            else:
+                features = model(inputs.to(args.device))
+                features = features.cpu().numpy()
+                if pca != None:
+                    features = pca.transform(features)
+                all_features[indices.numpy(), :] = features
+
         
         logging.debug("Extracting queries features for evaluation/testing")
         queries_infer_batch_size = 1 if test_method == "single_query" else args.infer_batch_size
@@ -159,6 +197,35 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
         queries_dataloader = DataLoader(dataset=queries_subset_ds, num_workers=args.num_workers,
                                         batch_size=queries_infer_batch_size, pin_memory=(args.device=="cuda"))
         for inputs, indices in tqdm(queries_dataloader, ncols=100):
+            if args.multi_scale== "True":
+                if args.scaling_type == "down":
+                    scale_range = (480,640), (400,534), (343,458), (332,427)
+                    rescale_feature = []
+                    for i in (scale_range):
+                        globals()['input_scaled_data_%s' % i[0]] = torch.nn.functional.interpolate(inputs, i)
+                        globals()['input_scaled_data_%s' % i[0]] = model(globals()['input_scaled_data_%s' % i[0]].to(args.device))
+                        globals()['input_scaled_data_%s' % i[0]] = globals()['input_scaled_data_%s' % i[0]].cpu().numpy()
+                        rescale_feature.append(globals()['input_scaled_data_%s' % i[0]])
+                    features= np.mean(rescale_feature, axis=0)
+                elif args.scaling_type == "up":
+                    scale_range = (480,640), (576,768), (672,896), (720,960)
+                    rescale_feature = []
+                    for i in (scale_range):
+                        globals()['input_scaled_data_%s' % i[0]] = torch.nn.functional.interpolate(inputs, i)
+                        globals()['input_scaled_data_%s' % i[0]] = model(globals()['input_scaled_data_%s' % i[0]].to(args.device))
+                        globals()['input_scaled_data_%s' % i[0]] = globals()['input_scaled_data_%s' % i[0]].cpu().numpy()
+                        rescale_feature.append(globals()['input_scaled_data_%s' % i[0]])
+                    features= np.mean(rescale_feature, axis=0)
+                elif args.random_crop == "True":
+                    crop_feature = []
+                    for i in range(1, 6):
+                        globals()["transform__%s" % i] = T.RandomCrop((320, 430))
+                        globals()['input_crop_data_%s' % i] = globals()["transform__%s" % i] (inputs)
+                        globals()['input_crop_data_%s' % i] = model(globals()['input_crop_data_%s' % i].to(args.device))
+                        globals()['input_crop_data_%s' % i] = globals()['input_crop_data_%s' % i].cpu().numpy()
+                        crop_feature.append(globals()['input_crop_data_%s' % i])
+                    features= np.mean(crop_feature, axis=0)
+
             if test_method == "five_crops" or test_method == "nearest_crop" or test_method == 'maj_voting':
                 inputs = torch.cat(tuple(inputs))  # shape = 5*bs x 3 x 480 x 480
             features = model(inputs.to(args.device))
