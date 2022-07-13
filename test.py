@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.cluster import AgglomerativeClustering
 from collections import defaultdict
-from re_ranking import re_ranking_cluster_based
+from re_ranking import re_ranking_cluster_based, re_ranking_distance_based
 
 def test_efficient_ram_usage(args, eval_ds, model, test_method="hard_resize"):
     """This function gives the same output as test(), but uses much less RAM.
@@ -232,10 +232,8 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
         if args.cluster_type == 'DBSCAN' or args.cluster_type == 'Agglomorative':
             predictions = re_ranking_cluster_based(eval_ds=eval_ds ,predictions=predictions ,distances=distances, model_name=args.cluster_type, approach=args.re_ranking_approach)
         elif args.cluster_type == 'Proposed':
-            print('peroposed model')
+            predictions = re_ranking_distance_based(eval_ds=eval_ds ,predictions=predictions ,distances=distances, approach=args.re_ranking_approach)
 
-
-  
     #### For each query, check if the predictions are correct
     positives_per_query = eval_ds.get_positives()
     # args.recall_values by default is [1, 5, 10, 20]
