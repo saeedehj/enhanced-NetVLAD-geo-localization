@@ -56,7 +56,7 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
-                pred = f_remove_dup(sorted_list)
+            pred = f_remove_dup(sorted_list)
         elif approach == 'approach3':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])[0]
