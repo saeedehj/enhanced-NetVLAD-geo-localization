@@ -197,7 +197,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
         queries_dataloader = DataLoader(dataset=queries_subset_ds, num_workers=args.num_workers,
                                         batch_size=queries_infer_batch_size, pin_memory=(args.device=="cuda"))
         for inputs, indices in tqdm(queries_dataloader, ncols=100):
-            if args.multi_scale== "True":
+            if args.multi_scale == "True":
                 if args.scaling_type == "down":
                     scale_range = (480,640), (400,534), (343,458), (332,427)
                     rescale_feature = []
@@ -225,23 +225,26 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
                         globals()['input_crop_data_%s' % i] = globals()['input_crop_data_%s' % i].cpu().numpy()
                         crop_feature.append(globals()['input_crop_data_%s' % i])
                     features= np.mean(crop_feature, axis=0)
-
-            if test_method == "five_crops" or test_method == "nearest_crop" or test_method == 'maj_voting':
-                inputs = torch.cat(tuple(inputs))  # shape = 5*bs x 3 x 480 x 480
-            features = model(inputs.to(args.device))
-            if test_method == "five_crops":  # Compute mean along the 5 crops
-                features = torch.stack(torch.split(features, 5)).mean(1)
-            features = features.cpu().numpy()
-            if pca != None:
-                features = pca.transform(features)
-            
-            if test_method == "nearest_crop" or test_method == 'maj_voting':  # store the features of all 5 crops
-                start_idx = eval_ds.database_num + (indices[0] - eval_ds.database_num) * 5
-                end_idx   = start_idx + indices.shape[0] * 5
-                indices = np.arange(start_idx, end_idx)
-                all_features[indices, :] = features
-            else:
+                
                 all_features[indices.numpy(), :] = features
+            else:
+                
+                if test_method == "five_crops" or test_method == "nearest_crop" or test_method == 'maj_voting':
+                    inputs = torch.cat(tuple(inputs))  # shape = 5*bs x 3 x 480 x 480
+                features = model(inputs.to(args.device))
+                if test_method == "five_crops":  # Compute mean along the 5 crops
+                    features = torch.stack(torch.split(features, 5)).mean(1)
+                features = features.cpu().numpy()
+                if pca != None:
+                    features = pca.transform(features)
+                
+                if test_method == "nearest_crop" or test_method == 'maj_voting':  # store the features of all 5 crops
+                    start_idx = eval_ds.database_num + (indices[0] - eval_ds.database_num) * 5
+                    end_idx   = start_idx + indices.shape[0] * 5
+                    indices = np.arange(start_idx, end_idx)
+                    all_features[indices, :] = features
+                else:
+                    all_features[indices.numpy(), :] = features
     
     queries_features = all_features[eval_ds.database_num:]
     database_features = all_features[:eval_ds.database_num]
