@@ -38,7 +38,7 @@ from model.gan.options.test_options import TestOptions
 def gan():
     print('TestOptions before parsed')
 
-    opt = TestOptions().parse
+    opt = TestOptions().parse()
     # get test options
 
 

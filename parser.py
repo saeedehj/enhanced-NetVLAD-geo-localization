@@ -74,10 +74,7 @@ def parse_arguments():
     parser.add_argument("--train_positives_dist_threshold", type=int, default=10, help="_")
     parser.add_argument('--recall_values', type=int, default=[1, 5, 10, 20], nargs="+",
                         help="Recalls to be computed, such as R@5.")
-    parser.add_argument('--re_ranking', type=bool, default=False, choices=[True, False],
-                        help="Re-Ranking / Post-Processing on n-top candidates prediction for each query")
-    parser.add_argument('--re_ranking_cluster', type=int, default=3, 
-                        help="number of clusters for Re-Ranking")
+   
     
     # Data augmentation parameters
     parser.add_argument("--brightness", type=float, default=None, help="_")
@@ -111,8 +108,10 @@ def parse_arguments():
     parser.add_argument('--random_crop', type=str, default="False", choices=['False', 'True'])
 
     # Re-ranking
-    parser.add_argument("--cluster_type", type=str, default=None, choices=['DBSCAN', 'agglomorative', 'proposed'])
-    parser.add_argument("--approach", type=str, default=None, choices=['approach1', 'approach2', 'approach3'])
+    parser.add_argument('--re_ranking', type=bool, default=False, choices=[True, False],
+                        help="Re-Ranking / Post-Processing on n-top candidates prediction for each query")
+    parser.add_argument("--cluster_type", type=str, default=None, choices=['DBSCAN', 'Agglomorative', 'Proposed'])
+    parser.add_argument("--re_ranking_approach", type=str, default='approach1', choices=['approach1', 'approach2', 'approach3', 'approach4'])
 
     # GAN Params
     # parser.add_argument('--phase', type=str, default='test', help='train, val, test, etc')
