@@ -170,7 +170,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
                     if pca != None:
                         features = pca.transform(features)
                     all_features[indices.numpy(), :] = features
-                elif args.random_crop == "True":
+                elif args.scaling_type == "random_crop":
                     crop_feature = []
                     for i in range(1,6):
                         globals()["transform__%s" % i] = T.RandomCrop((320, 430))
@@ -216,7 +216,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
                         globals()['input_scaled_data_%s' % i[0]] = globals()['input_scaled_data_%s' % i[0]].cpu().numpy()
                         rescale_feature.append(globals()['input_scaled_data_%s' % i[0]])
                     features= np.mean(rescale_feature, axis=0)
-                elif args.random_crop == "True":
+                elif args.scaling_type == "random_crop":
                     crop_feature = []
                     for i in range(1, 6):
                         globals()["transform__%s" % i] = T.RandomCrop((320, 430))
