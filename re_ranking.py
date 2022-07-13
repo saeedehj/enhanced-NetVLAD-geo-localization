@@ -31,7 +31,7 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
         for i, j in zip(df_distance.columns, y_db):
             d[j].append(i)
       
-        if approach == 'approach2':
+        if approach == 'approach2' or approach =='approach3' or approach =='approach4':
             dist_dic= defaultdict()
             d_list= []
             for i in d.keys():
