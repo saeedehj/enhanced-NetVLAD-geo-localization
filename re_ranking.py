@@ -14,7 +14,7 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
             utm_x = float(path.split("@")[1])
             utm_y = float(path.split("@")[2])
             utm = (utm_x,utm_y)
-            utm_list.append(utm)
+            utm_list.append(utm)    
             indx_list.append(p)
         utm_list= np.array(utm_list)
         distance = np.linalg.norm(utm_list - utm_list[:,None], axis=-1)
@@ -23,7 +23,7 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
         if model_name == 'Agglomorative':
             model = AgglomerativeClustering(affinity='precomputed', n_clusters=5, linkage='complete').fit(df_distance )
             y_db = model.labels_
-        elif model_name == 'DBSCAN':
+        if model_name == 'DBSCAN':
             model =  DBSCAN(eps=5, min_samples=2, metric='precomputed')  # using "precomputed" as recommended by @Anony-Mousse
             y_db = model.fit_predict(df_distance)
 
@@ -57,15 +57,18 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
                 element_0 = np.array(d[k])
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
             pred = f_remove_dup(sorted_list)
-        elif approach == 'approach3':
+        
+        if approach == 'approach3':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])[0]
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
             for k in sorted_tag_count.keys():
                 new_list = np.delete(np.array(d[k]), 0)
                 sorted_list = np.concatenate((sorted_list, new_list), axis=0)
+            
             pred = f_remove_dup(sorted_list)
-        elif approach == 'approach4':
+        
+        if approach == 'approach4':
             for k in sorted_tag_count.keys():
                 element_0 = np.array(d[k])[0]
                 sorted_list = np.concatenate((sorted_list, np.array(element_0).reshape(-1)), axis=0)
@@ -84,7 +87,6 @@ def re_ranking_cluster_based(eval_ds, predictions, distances, model_name, approa
                 new_list = np.delete(np.array(d[k]), 0)
                 sorted_list1 = np.concatenate((sorted_list1 , new_list), axis=0)
             pred = f_remove_dup(sorted_list1)
-        
         predictions[query_index]= pred
 
     return predictions
