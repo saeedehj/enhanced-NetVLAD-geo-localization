@@ -10,5 +10,5 @@ torchscan==0.1.1
 googledrivedownloader==0.4
 requests==2.26.0
 timm==0.4.12
-transformers==4.8.2
+transformers==4.36.0
 einops
